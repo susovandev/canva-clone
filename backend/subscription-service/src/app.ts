@@ -26,7 +26,7 @@ export class App {
   private severListen() {
     this.app.listen(config.port, () => {
       Logger.info(
-        `Upload service server is running on port: ${config.port} in ${config.env} mode`,
+        `Subscription-service server is running on port: ${config.port} in ${config.env} mode`,
       );
     });
   }
