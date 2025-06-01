@@ -1,5 +1,12 @@
 import express, { Application } from 'express';
-import { config, morganMiddleware } from '@/config/index';
+import helmet from 'helmet';
+import cors from 'cors';
+import {
+  config,
+  connectDB,
+  corsOptions,
+  morganMiddleware,
+} from '@/config/index';
 import { Logger } from '@/utils';
 import appRoutes from './routes/app.routes';
 
@@ -9,14 +16,23 @@ export class App {
     this.app = express();
   }
 
-  public start() {
+  public async start() {
+    await this.databaseConnection();
     this.setupMiddlewares();
     this.setupRoutes();
     this.severListen();
   }
 
+  private async databaseConnection() {
+    await connectDB();
+  }
+
   private setupMiddlewares() {
     this.app.use(morganMiddleware);
+    this.app.use(helmet());
+    this.app.use(cors(corsOptions));
+    this.app.use(express.json());
+    this.app.use(express.urlencoded({ extended: true }));
   }
 
   private setupRoutes() {
